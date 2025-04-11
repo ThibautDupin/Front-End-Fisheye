@@ -9,7 +9,9 @@ export default function photographerTemplate(data) {
         img.setAttribute("src", picture)
         const h2 = document.createElement( 'h2' );
         h2.textContent = name;
-        article.appendChild(img);
+        article.appendChild(img)
+        img.setAttribute("alt", `Image de ${name}`);
+        img.setAttribute("aria-label", `Acceder à la page de ${name}`);
         article.appendChild(h2);
         return (article);
     }

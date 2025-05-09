@@ -1,13 +1,75 @@
 #contact_modal {
     display: none;
 }
-
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:20px;
+}
 .photograph-header {
     background-color: #FAFAFA;
     height: 300px;
     margin: 0 100px;
 }
+.photograph-card{
+    display:flex;
+    flex-direction: row-reverse;
+    align-items: center ;
+    justify-content: space-between;
+    height:100%;
+    margin:20px
+}
+.photograph-card img {
+    height:100%
+}
+.like-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    
+}
+.fa-heart{
+    color:darkred;
+    font-size: 16px;
+    
+}
+.media{
+    height:350px;
+    width: 350px;;
+}
+.media-card{
+    height:300px;
+    width:100%;
+    overflow:hidden;
+}
+.media-card img {
+    height:100%;
+    object-fit: cover;
+    width:100%
+}
+.media-card video {
+    object-fit: cover;
+    height:100%
 
+}
+.media-infos{
+    display:flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.media-section{
+    width:90%;
+    display: flex;
+    flex-wrap: wrap;
+    gap:20px;
+    justify-content: center;
+    align-items: center;
+}
 .contact_button {
     font-size: 20px;
     font-weight: bold;

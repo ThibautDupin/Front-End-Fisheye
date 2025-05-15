@@ -30,24 +30,28 @@ imageContainer.appendChild(mediaElement)
         
 
 
-        const div = document.createElement( 'div' );
-        div.setAttribute("class", "media-infos");
-        media.appendChild(div);
+        const infosMedia = document.createElement( 'div' );
+        infosMedia.setAttribute("class", "media-infos");
+        media.appendChild(infosMedia);
         const nameMedia = document.createElement( 'p' );
         nameMedia.textContent = title;
         nameMedia.setAttribute("class", "media-title");
-        div.appendChild(nameMedia);
-        const likesMedia = document.createElement( 'p' );
-        likesMedia.textContent = likes;
-        likesMedia.setAttribute("class", "media-likes");
-        div.appendChild(likesMedia);
+        infosMedia.appendChild(nameMedia);
+        const likeMedia = document.createElement( 'div' );
+        likeMedia.setAttribute("class", "media-likes");
+        infosMedia.appendChild(likeMedia);
+
+        const likesMediaNumber = document.createElement( 'p' );
+        likesMediaNumber.textContent = likes;
+        likesMediaNumber.setAttribute("class", "media-likes-number");
+        likeMedia.appendChild(likesMediaNumber);
         const heart = document.createElement('button');
         heart.setAttribute("class", "like-button");
         heart.setAttribute("aria-label", "Ajouter un like");
         const heartIcon = document.createElement('i');
         heartIcon.setAttribute("class", "fa-solid fa-heart");
         heart.appendChild(heartIcon);
-        div.appendChild(heart);
+        likeMedia.appendChild(heart);
         
     
         

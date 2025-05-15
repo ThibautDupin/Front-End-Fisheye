@@ -1,9 +1,8 @@
-function displayModal() {
-    const modal = document.getElementById("contact_modal");
-	modal.style.display = "block";
-}
+const contactModal = document.querySelector("#contact-modal");
+const contactButton = document.querySelector(".contact_button");
+const closeModalButton = document.querySelector(".close-modal");
 
-function closeModal() {
-    const modal = document.getElementById("contact_modal");
-    modal.style.display = "none";
-}
+contactButton.addEventListener("click", () => {
+    contactModal.style.transform = "translateX(0%)";
+});
+   

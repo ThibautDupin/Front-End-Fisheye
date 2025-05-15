@@ -48,5 +48,6 @@ async function getPhotographersAndMedia() {
     } else {
         console.error("Aucun photographe ou média trouvé !");
     }
+
 }
   init()

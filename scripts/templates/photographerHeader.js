@@ -19,7 +19,6 @@ export default function photographerHeaderTemplate(data) {
         button.setAttribute("aria-label", `Contactez ${name}`);
         button.setAttribute("class", "contact_button");
         button.textContent = "Contactez-moi";
-        button.setAttribute.onclick = displayModal();
         article.appendChild(button);
     
         // Ajouter les informations du photographe

@@ -18,20 +18,40 @@
     </main>
     <div class="contact-modal" id="contact-modal">
       <form>
-        <header>
+        <header class="form-title">
           <h2>Contactez-moi</h2>
           <img class="close-modal" src="assets/icons/close.svg"/>
         </header>
         <div>
-          
-          <!-- <label>Prénom</label>
-          <input /> -->
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" required />
+
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" required />
+
+          <label for="email">Adresse mail</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="commentaire">Commentaire</label>
+          <textarea id="commentaire" name="commentaire" rows="4" required></textarea>
         </div>
-        <button class="contact_button">Envoyer</button>
+        <button class="send" type="submit">Envoyer</button>
       </form>
+    </div>
+    
+    <div id="lightbox">
+      <span id="lightbox-close"><i class="fa-solid fa-xmark"></i></span>
+      <button id="lightbox-prev"><i class="fa-solid fa-chevron-left"></i></button>
+      <button id="lightbox-next"><i class="fa-solid fa-chevron-right"></i></button>
+      <div id="lightbox-content"></div>
+    </div>
+    <!-- Compteur de likes total -->
+    <div id="total-likes-counter">
+      <span id="total-likes-value">0</span>
+      <i class="fa-solid fa-heart"></i>
     </div>
     <footer></footer>
     <script type=module src="scripts/pages/photographer.js"></script>
-    <script src="/scripts/utils/contactForm.js"></script>
+    <script type=module src="scripts/utils/contactForm.js"></script>
   </body>
 </html>

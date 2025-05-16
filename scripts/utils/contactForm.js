@@ -1,8 +1,9 @@
-const contactModal = document.querySelector("#contact-modal");
-const contactButton = document.querySelector(".contact_button");
+const confirmModal = document.querySelector(".send");
 const closeModalButton = document.querySelector(".close-modal");
+const contactModal = document.querySelector("#contact-modal");
 
-contactButton.addEventListener("click", () => {
-    contactModal.style.transform = "translateX(0%)";
+closeModalButton.addEventListener("click", () => {
+    contactModal.style.transform = "translateX(100%)";
 });
-   
+
+

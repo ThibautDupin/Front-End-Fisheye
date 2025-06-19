@@ -228,14 +228,13 @@ form input {
 }
 #total-likes-counter {
     position: fixed;
-    bottom: 30px;
-    right: 40px;
-    background: #fff;
+    bottom: 0px;
+    right: 30px;
+    background:  #DB8876;
     color: #901C1C;
     font-size: 2rem;
     font-weight: bold;
     padding: 12px 24px;
-    border-radius: 30px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     display: flex;
     align-items: center;
@@ -245,4 +244,16 @@ form input {
 #total-likes-counter i {
     color: #901C1C;
     font-size: 2rem;
+}
+.sort-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+#sort-select {
+    padding: 6px 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }

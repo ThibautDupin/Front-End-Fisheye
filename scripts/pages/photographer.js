@@ -93,6 +93,42 @@ async function getPhotographersAndMedia() {
             mediaSection.appendChild(mediaCardDOM);
         });
 
+        // Fonction de tri
+        function sortMedia(mediaArray, criterion) {
+            switch (criterion) {
+                case "popularity":
+                    return [...mediaArray].sort((a, b) => b.likes - a.likes);
+                case "date":
+                    return [...mediaArray].sort((a, b) => new Date(b.date) - new Date(a.date));
+                case "title":
+                    return [...mediaArray].sort((a, b) => a.title.localeCompare(b.title));
+                default:
+                    return mediaArray;
+            }
+        }
+
+        // Fonction pour afficher les médias
+        function displayMedia(mediaArray) {
+            mediaSection.innerHTML = "";
+            mediaArray.forEach((media) => {
+                const mediaModel = mediaTemplate(media, photographers);
+                const mediaCardDOM = mediaModel.getMedia();
+                mediaSection.appendChild(mediaCardDOM);
+            });
+            // Réinitialise et réattache la gestion des likes ici si besoin
+        }
+
+        // Ajoute l'écouteur sur le menu de tri
+        document.getElementById("sort-select").addEventListener("change", function () {
+            const sorted = sortMedia(filteredMedia, this.value);
+            displayMedia(sorted);
+            // Réinitialise le compteur de likes total et les events de like ici si besoin
+        });
+
+        // Affichage initial trié par popularité
+        const sortedInitial = sortMedia(filteredMedia, "popularity");
+        displayMedia(sortedInitial);
+
         // Initialisation du compteur de likes total
         const countLikes = document.querySelectorAll(".media-likes-number");
         let totalLike = Array.from(countLikes).reduce((sum, el) => sum + parseInt(el.textContent, 10), 0);

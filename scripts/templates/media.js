@@ -86,6 +86,41 @@ export default function mediaTemplate(media, photographers) {
     return media;
   }
 
+  // Vérifie si le menu de tri existe déjà pour éviter les doublons
+  if (!document.querySelector('.sort-menu')) {
+      const sortMenu = document.createElement('div');
+      sortMenu.className = 'sort-menu';
+
+      const sortLabel = document.createElement('label');
+      sortLabel.setAttribute('for', 'sort-select');
+      sortLabel.textContent = 'Trier par :';
+
+      const sortSelect = document.createElement('select');
+      sortSelect.id = 'sort-select';
+
+      const optionPopularity = document.createElement('option');
+      optionPopularity.value = 'popularity';
+      optionPopularity.textContent = 'Popularité';
+
+      const optionDate = document.createElement('option');
+      optionDate.value = 'date';
+      optionDate.textContent = 'Date';
+
+      const optionTitle = document.createElement('option');
+      optionTitle.value = 'title';
+      optionTitle.textContent = 'Titre';
+
+      sortSelect.appendChild(optionPopularity);
+      sortSelect.appendChild(optionDate);
+      sortSelect.appendChild(optionTitle);
+
+      sortMenu.appendChild(sortLabel);
+      sortMenu.appendChild(sortSelect);
+
+      // Ajoute le menu de tri avant la section des médias
+      const main = document.querySelector('main');
+      main.insertBefore(sortMenu, main.querySelector('.media-section'));
+  }
 
   return { picture, getMedia };
 }

@@ -3,7 +3,6 @@ export default function mediaTemplate(media, photographers) {
     (photographer) => photographer.id === media.photographerId
   );
   const { date, likes, price, image, video, title } = media;
-
   const picture = `assets/photographers/${portrait}`;
 
   function getMedia() {
@@ -62,19 +61,19 @@ export default function mediaTemplate(media, photographers) {
       const lightboxContent = document.getElementById("lightbox-content");
       lightboxContent.innerHTML = ""; // Vide le contenu précédent
 
-      let clone;
+      let data;
       if (mediaElement.tagName === "IMG") {
-        clone = document.createElement("img");
-        clone.src = mediaElement.src;
-        clone.alt = mediaElement.alt;
+        data = document.createElement("img");
+        data.src = mediaElement.src;
+        data.alt = mediaElement.alt;
       } else if (mediaElement.tagName === "VIDEO") {
-        clone = document.createElement("video");
-        clone.src = mediaElement.src;
-        clone.setAttribute("controls", "");
-        clone.setAttribute("autoplay", "");
-        clone.setAttribute("muted", "");
+        data = document.createElement("video");
+        data.src = mediaElement.src;
+        data.setAttribute("controls", "");
+        data.setAttribute("autoplay", "");
+        data.setAttribute("muted", "");
       }
-      lightboxContent.appendChild(clone);
+      lightboxContent.appendChild(data);
       lightbox.style.display = "flex";
     });
 
@@ -86,41 +85,6 @@ export default function mediaTemplate(media, photographers) {
     return media;
   }
 
-  // Vérifie si le menu de tri existe déjà pour éviter les doublons
-  if (!document.querySelector('.sort-menu')) {
-      const sortMenu = document.createElement('div');
-      sortMenu.className = 'sort-menu';
-
-      const sortLabel = document.createElement('label');
-      sortLabel.setAttribute('for', 'sort-select');
-      sortLabel.textContent = 'Trier par :';
-
-      const sortSelect = document.createElement('select');
-      sortSelect.id = 'sort-select';
-
-      const optionPopularity = document.createElement('option');
-      optionPopularity.value = 'popularity';
-      optionPopularity.textContent = 'Popularité';
-
-      const optionDate = document.createElement('option');
-      optionDate.value = 'date';
-      optionDate.textContent = 'Date';
-
-      const optionTitle = document.createElement('option');
-      optionTitle.value = 'title';
-      optionTitle.textContent = 'Titre';
-
-      sortSelect.appendChild(optionPopularity);
-      sortSelect.appendChild(optionDate);
-      sortSelect.appendChild(optionTitle);
-
-      sortMenu.appendChild(sortLabel);
-      sortMenu.appendChild(sortSelect);
-
-      // Ajoute le menu de tri avant la section des médias
-      const main = document.querySelector('main');
-      main.insertBefore(sortMenu, main.querySelector('.media-section'));
-  }
-
+ 
   return { picture, getMedia };
 }

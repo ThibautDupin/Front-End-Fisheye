@@ -14,9 +14,14 @@ async function getPhotographersAndMedia() {
   }
 }
 
-function sortMedia(mediaArray, criterion, order = "desc") {
+// Variables pour mémoriser le tri
+let lastSortcategory = "popularity";
+let lastSortOrder = "asc";
+
+// Fonction de tri (déjà présente)
+function sortMedia(mediaArray, category, order = "asc") {
     let sorted;
-    switch (criterion) {
+    switch (category) {
         case "popularity":
             sorted = [...mediaArray].sort((a, b) => b.likes - a.likes);
             break;
@@ -29,7 +34,7 @@ function sortMedia(mediaArray, criterion, order = "desc") {
         default:
             sorted = mediaArray;
     }
-    if (order === "asc") {
+    if (order === "desc") {
         sorted.reverse();
     }
     return sorted;
@@ -62,21 +67,56 @@ async function init() {
     if (!sortMenu) {
         sortMenu = document.createElement('div');
         sortMenu.className = 'sort-menu';
-        sortMenu.innerHTML = `
-            <label for="sort-select">Trier par :</label>
-            <select id="sort-select">
-                <option value="popularity">Popularité</option>
-                <option value="date">Date</option>
-                <option value="title">Titre</option>
-            </select>
-            <label for="sort-order">Ordre :</label>
-            <select id="sort-order">
-                <option value="desc">Décroissant</option>
-                <option value="asc">Croissant</option>
-            </select>
+        sortMenu.innerHTML = 
+        `
+        <div class="custom-dropdown">
+          <div class="dropdown-toggle">Trier par : <span id="selected-sort">Popularité</span> <i class="fa-solid fa-chevron-down"></i></div>
+          <ul class="dropdown-list">
+              <li class="category" value="popularity">Popularité</li>
+              <li class="category" value="date">Date</li>
+              <li class="category" value="title">Titre</li>
+          </ul>
+        </div>
+        <span id="sort-order-indicator"></span>
         `;
+
+        // Ajout des écouteurs de clic pour chaque catégorie de tri
+        sortMenu.querySelectorAll('.category').forEach(li => {
+            li.addEventListener('click', function () {
+            const critereTri = this.getAttribute('value');
+            if (critereTri === lastSortcategory) {
+                lastSortOrder = lastSortOrder === "asc" ? "desc" : "asc";
+            } else {
+                lastSortOrder = "asc"; 
+            }
+            lastSortcategory = critereTri;
+            currentSortedMedia = sortMedia(filteredMedia, critereTri, lastSortOrder);
+            displayMedia(currentSortedMedia);
+            updateSortOrderIndicator();
+            });
+        });
+        // `
+        //     <label for="sort-select">Trier par :</label>
+        //     <select id="sort-select">
+        //         <option value="popularity">Popularité</option>
+        //         <option value="date">Date</option>
+        //         <option value="title">Titre</option>
+        //     </select>
+        //     <span id="sort-order-indicator"></span>
+        // `;
         main.appendChild(sortMenu);
+    } else {
+        // Ajoute la span juste après le select si elle n'existe pas déjà
+        const select = sortMenu.querySelector('#sort-select');
+        if (select && !sortMenu.querySelector('#sort-order-indicator')) {
+            const span = document.createElement('span');
+            span.id = 'sort-order-indicator';
+            span.style.marginLeft = "8px";
+            select.insertAdjacentElement('afterend', span);
+        }
     }
+
+
 
     // Création/vidage de la section médias
     let mediaSection = document.querySelector(".media-section");
@@ -118,6 +158,8 @@ async function init() {
         );
         let total = document.querySelector("#total-likes-value");
         total.textContent = `${totalLike}`;
+        let priceperDay = document.querySelector("#price-per-day");
+        priceperDay.textContent = `${photographer.price}€/jour`;
 
         // Réattacher la gestion des likes
         const likeButtons = document.querySelectorAll(".like-button");
@@ -172,7 +214,7 @@ async function init() {
     }
 
     // Variable pour garder la liste courante triée
-    let currentSortedMedia = sortMedia(filteredMedia, "popularity");
+    let currentSortedMedia = sortMedia(filteredMedia, "popularity", "asc");
     displayMedia(currentSortedMedia);
 
     // Navigation lightbox
@@ -189,17 +231,44 @@ async function init() {
         document.getElementById("lightbox").style.display = "none";
     };
 
-    // Gestion du tri dynamique
-    document.getElementById("sort-select").addEventListener("change", function () {
-        currentSortedMedia = sortMedia(filteredMedia, this.value, document.getElementById("sort-order").value);
-        displayMedia(currentSortedMedia);
-    });
-    document.getElementById("sort-order").addEventListener("change", function () {
-        currentSortedMedia = sortMedia(filteredMedia, document.getElementById("sort-select").value, this.value);
-        displayMedia(currentSortedMedia);
-    });
+
+    // Fonction utilitaire pour mettre à jour l'affichage de l'ordre
+    function updateSortOrderIndicator() {
+        sortOrderIndicator.textContent = lastSortOrder === "asc" ? "asc" : "desc";
+    }
+
+
+    // Affichage initial
+    currentSortedMedia = sortMedia(filteredMedia, "popularity", "asc");
+    displayMedia(currentSortedMedia);
+    updateSortOrderIndicator();
   } else {
     console.error("Aucun photographe ou média trouvé !");
   }
 }
 init();
+
+// JavaScript
+const dropdown = document.querySelector('.custom-dropdown');
+const toggle = dropdown.querySelector('.dropdown-toggle');
+const list = dropdown.querySelector('.dropdown-list');
+const selected = dropdown.querySelector('#selected-sort');
+
+toggle.addEventListener('click', () => {
+  dropdown.classList.toggle('open');
+});
+
+list.querySelectorAll('li').forEach(li => {
+  li.addEventListener('click', function() {
+    selected.textContent = this.textContent;
+    dropdown.classList.remove('open');
+    // Ici tu peux lancer ton tri avec this.dataset.value
+  });
+});
+
+// Fermer le menu si clic en dehors
+document.addEventListener('click', (e) => {
+  if (!dropdown.contains(e.target)) {
+    dropdown.classList.remove('open');
+  }
+});

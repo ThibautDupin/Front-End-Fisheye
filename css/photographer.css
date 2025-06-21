@@ -251,9 +251,17 @@ form input {
     gap: 10px;
     margin: 20px 0;
 }
-#sort-select {
-    padding: 6px 12px;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+.sort-list{
+    padding:0;
+}
+.sort-list li {
+   background-color :#901C1C;
+color:white;
+list-style:none;
+padding: 5px 10px;
+text-align: center;
+}
+.sort-list li:nth-child(1),
+.sort-list li:nth-child(2) {
+    border-bottom: 1px solid #fff;
 }

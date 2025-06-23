@@ -245,23 +245,15 @@ form input {
     color: #901C1C;
     font-size: 2rem;
 }
-.sort-menu {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
+#dropdown-menu li:not(:first-child) {
+  display: none;
 }
-.sort-list{
-    padding:0;
+#dropdown-menu.open li {
+  display: block;
 }
-.sort-list li {
-   background-color :#901C1C;
-color:white;
-list-style:none;
-padding: 5px 10px;
-text-align: center;
-}
-.sort-list li:nth-child(1),
-.sort-list li:nth-child(2) {
-    border-bottom: 1px solid #fff;
+#dropdown-menu{
+    list-style: none;
+    background-color:red;
+    color:white;
+    width:100px;
 }

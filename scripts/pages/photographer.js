@@ -14,14 +14,9 @@ async function getPhotographersAndMedia() {
   }
 }
 
-// Variables pour mémoriser le tri
-let lastSortcategory = "popularity";
-let lastSortOrder = "asc";
-
-// Fonction de tri (déjà présente)
-function sortMedia(mediaArray, category, order = "asc") {
+function sortMedia(mediaArray, criterion, order = "desc") {
     let sorted;
-    switch (category) {
+    switch (criterion) {
         case "popularity":
             sorted = [...mediaArray].sort((a, b) => b.likes - a.likes);
             break;
@@ -34,9 +29,7 @@ function sortMedia(mediaArray, category, order = "asc") {
         default:
             sorted = mediaArray;
     }
-    if (order === "desc") {
-        sorted.reverse();
-    }
+    if (order === "asc") sorted.reverse();
     return sorted;
 }
 
@@ -61,62 +54,6 @@ async function init() {
     console.log(photographer);
 
     const main = document.querySelector("main");
-
-    // Ajout du menu de tri dynamique
-    let sortMenu = document.querySelector('.sort-menu');
-    if (!sortMenu) {
-        sortMenu = document.createElement('div');
-        sortMenu.className = 'sort-menu';
-        sortMenu.innerHTML = 
-        `
-        <div class="custom-dropdown">
-          <div class="dropdown-toggle">Trier par : <span id="selected-sort">Popularité</span> <i class="fa-solid fa-chevron-down"></i></div>
-          <ul class="dropdown-list">
-              <li class="category" value="popularity">Popularité</li>
-              <li class="category" value="date">Date</li>
-              <li class="category" value="title">Titre</li>
-          </ul>
-        </div>
-        <span id="sort-order-indicator"></span>
-        `;
-
-        // Ajout des écouteurs de clic pour chaque catégorie de tri
-        sortMenu.querySelectorAll('.category').forEach(li => {
-            li.addEventListener('click', function () {
-            const critereTri = this.getAttribute('value');
-            if (critereTri === lastSortcategory) {
-                lastSortOrder = lastSortOrder === "asc" ? "desc" : "asc";
-            } else {
-                lastSortOrder = "asc"; 
-            }
-            lastSortcategory = critereTri;
-            currentSortedMedia = sortMedia(filteredMedia, critereTri, lastSortOrder);
-            displayMedia(currentSortedMedia);
-            updateSortOrderIndicator();
-            });
-        });
-        // `
-        //     <label for="sort-select">Trier par :</label>
-        //     <select id="sort-select">
-        //         <option value="popularity">Popularité</option>
-        //         <option value="date">Date</option>
-        //         <option value="title">Titre</option>
-        //     </select>
-        //     <span id="sort-order-indicator"></span>
-        // `;
-        main.appendChild(sortMenu);
-    } else {
-        // Ajoute la span juste après le select si elle n'existe pas déjà
-        const select = sortMenu.querySelector('#sort-select');
-        if (select && !sortMenu.querySelector('#sort-order-indicator')) {
-            const span = document.createElement('span');
-            span.id = 'sort-order-indicator';
-            span.style.marginLeft = "8px";
-            select.insertAdjacentElement('afterend', span);
-        }
-    }
-
-
 
     // Création/vidage de la section médias
     let mediaSection = document.querySelector(".media-section");
@@ -195,7 +132,7 @@ async function init() {
         const lightboxContent = document.getElementById("lightbox-content");
         lightboxContent.innerHTML = "";
 
-        const mediaItem = currentSortedMedia[index];
+        const mediaItem = filteredMedia[index];
         let element;
         if (mediaItem.image) {
             element = document.createElement("img");
@@ -213,62 +150,89 @@ async function init() {
         currentMediaIndex = index;
     }
 
-    // Variable pour garder la liste courante triée
-    let currentSortedMedia = sortMedia(filteredMedia, "popularity", "asc");
-    displayMedia(currentSortedMedia);
+    // Affichage initial
+    displayMedia(filteredMedia);
 
     // Navigation lightbox
     document.getElementById("lightbox-prev").onclick = function () {
         currentMediaIndex =
-            (currentMediaIndex - 1 + currentSortedMedia.length) % currentSortedMedia.length;
+            (currentMediaIndex - 1 + filteredMedia.length) % filteredMedia.length;
         openLightbox(currentMediaIndex);
     };
     document.getElementById("lightbox-next").onclick = function () {
-        currentMediaIndex = (currentMediaIndex + 1) % currentSortedMedia.length;
+        currentMediaIndex = (currentMediaIndex + 1) % filteredMedia.length;
         openLightbox(currentMediaIndex);
     };
     document.getElementById("lightbox-close").onclick = function () {
         document.getElementById("lightbox").style.display = "none";
     };
 
+    window.filteredMedia = filteredMedia;
+    window.displayMedia = displayMedia;
 
-    // Fonction utilitaire pour mettre à jour l'affichage de l'ordre
-    function updateSortOrderIndicator() {
-        sortOrderIndicator.textContent = lastSortOrder === "asc" ? "asc" : "desc";
-    }
-
-
-    // Affichage initial
-    currentSortedMedia = sortMedia(filteredMedia, "popularity", "asc");
-    displayMedia(currentSortedMedia);
-    updateSortOrderIndicator();
   } else {
     console.error("Aucun photographe ou média trouvé !");
   }
 }
-init();
+document.addEventListener("DOMContentLoaded", () => {
+  const menu = document.getElementById("dropdown-menu");
 
-// JavaScript
-const dropdown = document.querySelector('.custom-dropdown');
-const toggle = dropdown.querySelector('.dropdown-toggle');
-const list = dropdown.querySelector('.dropdown-list');
-const selected = dropdown.querySelector('#selected-sort');
+  function setMainItemListener() {
+    // Toujours retirer les anciens écouteurs en clonant/remplaçant le noeud
+    const firstLi = menu.querySelector("li");
+    const newFirstLi = firstLi.cloneNode(true);
+    firstLi.parentNode.replaceChild(newFirstLi, firstLi);
 
-toggle.addEventListener('click', () => {
-  dropdown.classList.toggle('open');
-});
+    newFirstLi.addEventListener("click", (e) => {
+      menu.classList.toggle("open");
+      e.stopPropagation();
+    });
+  }
 
-list.querySelectorAll('li').forEach(li => {
-  li.addEventListener('click', function() {
-    selected.textContent = this.textContent;
-    dropdown.classList.remove('open');
-    // Ici tu peux lancer ton tri avec this.dataset.value
+  function setOtherItemsListeners() {
+    const items = Array.from(menu.querySelectorAll("li")).slice(1);
+    items.forEach(item => {
+      const newItem = item.cloneNode(true);
+      item.parentNode.replaceChild(newItem, item);
+
+      newItem.addEventListener("click", function(e) {
+        e.stopPropagation();
+        menu.classList.remove("open");
+        menu.insertBefore(this, menu.firstChild);
+        setMainItemListener();
+        setOtherItemsListeners();
+
+        // --- TRI DES MÉDIAS ---
+        const criterion = this.dataset.value;
+        // Utilise une variable globale pour l'ordre
+        if (!window.lastCriterion) window.lastCriterion = "popularity";
+        if (!window.sortOrder) window.sortOrder = "desc";
+        if (window.lastCriterion === criterion) {
+          window.sortOrder = window.sortOrder === "asc" ? "desc" : "asc";
+        } else {
+          window.sortOrder = "desc";
+        }
+        window.lastCriterion = criterion;
+
+        // Trie et affiche les médias
+        if (typeof filteredMedia !== "undefined" && typeof displayMedia === "function") {
+          const sorted = sortMedia(filteredMedia, criterion, window.sortOrder);
+          displayMedia(sorted);
+        }
+      });
+    });
+  }
+
+  setMainItemListener();
+  setOtherItemsListeners();
+
+  // Fermer si on clique ailleurs
+  document.addEventListener("click", (e) => {
+    if (!menu.contains(e.target)) {
+      menu.classList.remove("open");
+    }
   });
 });
+init();
 
-// Fermer le menu si clic en dehors
-document.addEventListener('click', (e) => {
-  if (!dropdown.contains(e.target)) {
-    dropdown.classList.remove('open');
-  }
-});
+

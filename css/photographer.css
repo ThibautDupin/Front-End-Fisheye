@@ -1,27 +1,83 @@
-main{
+/* BASE */
+body {
+    font-family: 'Kold Barkley', sans-serif !important;
+}
+main {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap:20px;
-    margin:20px
+    gap: 20px;
+    margin: 20px;
 }
+header { margin: 20px; }
+.logo { width: 200px; height: 50px; }
+
+/* PHOTOGRAPHER HEADER & CARD */
 .photograph-header {
     background-color: #FAFAFA;
+    height: 313px;
+    width: 1240px;
+}
+.photograph-card {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin: 20px;
+}
+.photograph-card img { height: 200px; }
+
+/* PHOTOGRAPHER INFOS */
+.photographer-information { width: 358px; height: 200px; }
+.photographer-information h2 {
+    font-size: 64px;
+    font-weight: 400;
+    color: #D3573C;
+    margin: 0;
+}
+.photographer-information :nth-child(2) {
+    color: #901C1C;
+    font-size: 24px;
+    font-weight: 400;
+}
+.photographer-information :nth-child(3) {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* MEDIA SECTION & CARDS */
+.media-section {
+    width: 1240px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+.media-card {
     height: 300px;
     width: 100%;
+    overflow: hidden;
 }
-.photograph-card{
-    display:flex;
-    flex-direction: row-reverse;
-    align-items: center ;
+.media-card img,
+.media-card video {
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+.media {
+    height: 350px;
+    width: 350px;
+}
+.media-infos {
+    display: flex;
     justify-content: space-between;
-    height:100%;
-    margin:20px
+    flex-direction: row;
 }
-.photograph-card img {
-    height:100%
-}
+.media-likes { display: flex; }
+
+/* LIKES & BUTTONS */
 .like-button {
     display: flex;
     align-items: center;
@@ -29,62 +85,27 @@ main{
     background: none;
     border: none;
     cursor: pointer;
-    
 }
-.fa-heart{
-    color:darkred;
+.fa-heart {
+    color: darkred;
     font-size: 16px;
-    
 }
-.media{
-    height:350px;
-    width: 350px;;
-}
-.media-card{
-    height:300px;
-    width:100%;
-    overflow:hidden;
-}
-.media-card img {
-    height:100%;
-    object-fit: cover;
-    width:100%
-}
-.media-card video {
-    object-fit: cover;
-    height:100%;
-    width:100%;
 
-}
-.media-infos{
-    display:flex;
-    justify-content: space-between;
-    flex-direction: row;
-}
-.media-section{
-    width:100%;
+/* CONTACT MODAL & FORM */
+.contact-modal {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.3);
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
     display: flex;
-    flex-wrap: wrap;
-    gap:20px;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+    transform: translateX(100%);
+    font-family: 'DM Sans', Arial, sans-serif;
 }
-.media-likes{
-    display: flex;
-}
-.contact_button {
-    font-size: 20px;
-    font-weight: bold;
-    color: white;
-    padding: 11px;
-    width: 170px;
-    height: 70px;
-    border: none;
-    background-color: #901C1C;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
 .modal {
     border-radius: 5px;
     background-color: #DB8876;
@@ -100,71 +121,138 @@ main{
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 5;
-    background-color:#312E2E;
-    opacity: 0 ;
-
+    background-color: #312E2E;
+    opacity: 0;
 }
-.contact-modal{
-    width: 100%;
-height: 100vh;
-background-color: rgba(0,0,0,0.3);
-position: fixed;
-z-index: 5;
-top: 0;
-left: 0;
-display: flex;
-justify-content: center;
-align-items: center;
-transform:translateX(100%);
+.modal-header-text { font-size: 2.5rem; font-weight: 400; }
+.modal-header-text p, .modal-header-text h2 { margin: 0; }
+.filter-text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 51px;
 }
-
-
-.modal header {
-    justify-content: space-between;
-    width: 100%;
-}
-
-.modal header img {
-    cursor: pointer;
-}
-
+.modal header { justify-content: space-between; width: 100%; }
+.modal header img { cursor: pointer; }
 .modal header h2 {
-    font-size: 64px;
+    font-size: 2.5rem;
     font-weight: normal;
     text-align: center;
 }
-
 form {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    background-color:#DB8876;
-    width:50vw;
-    height:80vh;
-    padding:2rem
+    align-items: center;
+    background-color: #DB8876;
+    width: 669px;
+    height: 900px;
+    border-radius: 5px;
+    justify-content: center;
 }
-
+.form-title {
+    display: flex;
+    width: 95%;
+    margin: 20px;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+}
 form label {
     color: #312E2E;
     font-size: 36px;
 }
-
-form div {
+.form-fields {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 95%;
     align-items: self-start;
-    margin-bottom: 26px;
+    margin: 0 20px;
+    height: 75%;
+    gap: 5px;
 }
-
+.form-fields textarea { width: 100%; height: 30%; }
 form input {
     width: 100%;
     height: 68px;
     border: none;
     border-radius: 5px;
 }
+.send {
+    width: 170px;
+    height: 69px;
+    color: white;
+    background-color: darkred;
+    border-radius: 5px;
+    border: none;
+    margin: 20px;
+    align-self: flex-start;
+}
+.contact_button {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    padding: 11px;
+    width: 170px;
+    height: 70px;
+    border: none;
+    background-color: #901C1C;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.contact_button:hover {
+    background-color: #DB8876;
+    color: black;
+}
 
-/* Lightbox */
+/* DROPDOWN MENU */
+.filter-container {
+    width: 85%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+}
+.filter-text { font-size: large; margin: 0; }
+#dropdown-menu {
+    list-style: none;
+    background-color: #901C1C;
+    color: white;
+    text-align: center;
+    padding: 5px 0;
+    width: 200px;
+    min-height: 41px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    left: 110px;
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin: 0;
+    margin-left: -25px;
+}
+#dropdown-menu li {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+}
+#dropdown-menu li:not(:first-child) { display: none; }
+#dropdown-menu.open li { display: flex; padding: 5px; }
+#dropdown-menu li:nth-child(2),
+#dropdown-menu li:nth-child(3) {
+    border-top: 1px solid #fff;
+    width: 150px;
+}
+#dropdown-menu.open { box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+.menu-main { padding: 5px; }
+.sort-arrow { margin-left: 5px; }
+
+/* LIGHTBOX */
 #lightbox {
     display: none;
     position: fixed;
@@ -177,7 +265,7 @@ form input {
     align-items: center;
     z-index: 1000;
 }
-
+#lightbox i { color: #901C1C; }
 #lightbox-content {
     display: flex;
     justify-content: center;
@@ -185,7 +273,7 @@ form input {
     width: 100%;
     height: 100%;
 }
-
+.close-modal i { font-size: 3.5rem; color: white; }
 #lightbox-close {
     position: absolute;
     top: 30px;
@@ -197,7 +285,6 @@ form input {
     background: none;
     border: none;
 }
-
 #lightbox-prev,
 #lightbox-next {
     position: absolute;
@@ -210,15 +297,8 @@ form input {
     cursor: pointer;
     z-index: 1001;
 }
-
-#lightbox-prev {
-    left: 40px;
-}
-
-#lightbox-next {
-    right: 40px;
-}
-
+#lightbox-prev { left: 40px; }
+#lightbox-next { right: 40px; }
 #lightbox-content img,
 #lightbox-content video {
     max-width: 80vw;
@@ -226,34 +306,25 @@ form input {
     display: block;
     margin: auto;
 }
+
+/* TOTAL LIKES COUNTER */
 #total-likes-counter {
     position: fixed;
     bottom: 0px;
     right: 30px;
-    background:  #DB8876;
-    color: #901C1C;
-    font-size: 2rem;
-    font-weight: bold;
+    background: #DB8876;
+    color: black;
+    font-size: 24px;
     padding: 12px 24px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     display: flex;
     align-items: center;
     gap: 10px;
     z-index: 1100;
+    width: 376px;
+    justify-content: space-evenly;
 }
 #total-likes-counter i {
-    color: #901C1C;
-    font-size: 2rem;
-}
-#dropdown-menu li:not(:first-child) {
-  display: none;
-}
-#dropdown-menu.open li {
-  display: block;
-}
-#dropdown-menu{
-    list-style: none;
-    background-color:red;
-    color:white;
-    width:100px;
+    color: black;
+    font-size: 24px;
 }

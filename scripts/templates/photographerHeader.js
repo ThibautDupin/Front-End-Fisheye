@@ -1,10 +1,10 @@
 export default function photographerHeaderTemplate(data) {
 
-
+    
     const { id, name, portrait, city, country,tagline } = data
 
     const picture = `assets/photographers/${portrait}`;
-
+    
     function getPhotoDOM() {
         // Créer un nouvel élément article
         const article = document.createElement('article');

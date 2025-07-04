@@ -80,3 +80,8 @@ a {
     font-size: 9px;
     margin:0;
 }
+
+a:focus {
+    outline: 2px solid #DB8876;
+    outline-offset: 4px;    
+}

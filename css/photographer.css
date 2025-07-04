@@ -320,7 +320,7 @@ form input {
     display: flex;
     align-items: center;
     gap: 10px;
-    z-index: 1100;
+    z-index: 999;
     width: 376px;
     justify-content: space-evenly;
 }
@@ -328,3 +328,7 @@ form input {
     color: black;
     font-size: 24px;
 }
+.media-card:focus{
+    outline: 2px solid #DB8876;
+    outline-offset: 4px;
+    }

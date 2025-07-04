@@ -12,7 +12,8 @@ export default function mediaTemplate(media, photographers) {
 
     const media = document.createElement("div");
     media.setAttribute("class", "media");
-    let mediaElement;
+    media.setAttribute("tabindex", "0");
+    let mediaElement; 
     if (image) {
       mediaElement = document.createElement("img");
       mediaElement.setAttribute("src", `assets/sample_photos/${name}/${image}`);
@@ -40,8 +41,7 @@ export default function mediaTemplate(media, photographers) {
     likeMedia.setAttribute("class", "media-likes");
     infosMedia.appendChild(likeMedia);
 
-// Likes count + incrementation
-
+    // Likes count + incrementation
     const likesMediaNumber = document.createElement("p");
     likesMediaNumber.textContent = likes;
     likesMediaNumber.setAttribute("class", "media-likes-number");
@@ -54,28 +54,7 @@ export default function mediaTemplate(media, photographers) {
     heart.appendChild(heartIcon);
     likeMedia.appendChild(heart);
 
-    // Ajoute l'ouverture de la lightbox au clic sur le média
-    mediaElement.style.cursor = "pointer";
-    mediaElement.addEventListener("click", function () {
-      const lightbox = document.getElementById("lightbox");
-      const lightboxContent = document.getElementById("lightbox-content");
-      lightboxContent.innerHTML = ""; // Vide le contenu précédent
-
-      let data;
-      if (mediaElement.tagName === "IMG") {
-        data = document.createElement("img");
-        data.src = mediaElement.src;
-        data.alt = mediaElement.alt;
-      } else if (mediaElement.tagName === "VIDEO") {
-        data = document.createElement("video");
-        data.src = mediaElement.src;
-        data.setAttribute("controls", "");
-        data.setAttribute("autoplay", "");
-        data.setAttribute("muted", "");
-      }
-      lightboxContent.appendChild(data);
-      lightbox.style.display = "flex";
-    });
+    // (SUPPRIMÉ) Pas d'écouteur click sur image/video ici
 
     // Fermer la lightbox au clic sur la croix
     document.getElementById("lightbox-close").onclick = function () {
@@ -85,6 +64,5 @@ export default function mediaTemplate(media, photographers) {
     return media;
   }
 
- 
   return { picture, getMedia };
 }

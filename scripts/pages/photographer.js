@@ -89,17 +89,28 @@ async function init() {
 
     function displayMedia(sortedMedia) {
       mediaSection.innerHTML = "";
-      sortedMedia.forEach((media) => {
+      sortedMedia.forEach((media, idx) => {
         const mediaModel = mediaTemplate(media, photographers);
         const mediaCardDOM = mediaModel.getMedia();
         mediaSection.appendChild(mediaCardDOM);
-      });
 
-      document
-        .querySelectorAll(".media-card img, .media-card video")
-        .forEach((el, idx) => {
-          el.addEventListener("click", () => openLightbox(idx));
+        mediaCardDOM.setAttribute('tabindex', '0');
+
+        // Ouvre la lightbox au clavier (Entrée/Espace)
+        mediaCardDOM.addEventListener('keydown', function(e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openLightbox(idx);
+          }
         });
+
+        // Ouvre la lightbox au clic sur la carte, sauf si clic sur .media-infos
+        mediaCardDOM.addEventListener('click', function(e) {
+          // Vérifie si le clic vient de .media-infos ou de ses enfants
+          if (e.target.closest('.media-infos')) return;
+          openLightbox(idx);
+        });
+      });
 
       const countLikes = document.querySelectorAll(".media-likes-number");
       let totalLike = Array.from(countLikes).reduce(
@@ -159,6 +170,24 @@ async function init() {
       lightboxContent.appendChild(element);
       lightbox.style.display = "flex";
       currentMediaIndex = index;
+
+      document.addEventListener("keydown", function handleLightboxKeys(e) {
+        const lightbox = document.getElementById("lightbox");
+        if (lightbox.style.display === "flex") {
+          if (e.key === "ArrowLeft") {
+            currentMediaIndex =
+              (currentMediaIndex - 1 + filteredMedia.length) % filteredMedia.length;
+            openLightbox(currentMediaIndex);
+          }
+          if (e.key === "ArrowRight") {
+            currentMediaIndex = (currentMediaIndex + 1) % filteredMedia.length;
+            openLightbox(currentMediaIndex);
+          }
+          if (e.key === "Escape") {
+            lightbox.style.display = "none";
+          }
+        }
+      });
     }
 
     displayMedia(filteredMedia);
@@ -190,6 +219,31 @@ init();
 document.addEventListener("DOMContentLoaded", () => {
   const menu = document.getElementById("dropdown-menu");
 
+  // Ajoute tabindex="0" à tous les li du menu (si tu veux tous focusables)
+  menu.querySelectorAll('li').forEach(li => {
+    li.setAttribute('tabindex', '0');
+    // Activation clavier
+    li.addEventListener('keydown', function(e) {
+      const allLis = Array.from(menu.querySelectorAll('li'));
+      const currentIndex = allLis.indexOf(document.activeElement);
+
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        li.click(); // Simule le clic pour déclencher le tri
+      }
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        let next = (currentIndex + 1) % allLis.length;
+        allLis[next].focus();
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        let prev = (currentIndex - 1 + allLis.length) % allLis.length;
+        allLis[prev].focus();
+      }
+    });
+  }); 
+
   function updateSortArrow() {
     menu.querySelectorAll('.sort-arrow').forEach(span => span.remove());
     const firstLi = menu.querySelector('li');
@@ -205,6 +259,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const firstLi = menu.querySelector("li");
     const newFirstLi = firstLi.cloneNode(true);
     firstLi.parentNode.replaceChild(newFirstLi, firstLi);
+
+    // Ajoute l'écouteur clavier ici aussi !
+    newFirstLi.setAttribute('tabindex', '0');
+    newFirstLi.addEventListener('keydown', function(e) {
+      const allLis = Array.from(menu.querySelectorAll('li'));
+      const currentIndex = allLis.indexOf(document.activeElement);
+
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        newFirstLi.click();
+      }
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        let next = (currentIndex + 1) % allLis.length;
+        allLis[next].focus();
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        let prev = (currentIndex - 1 + allLis.length) % allLis.length;
+        allLis[prev].focus();
+      }
+    });
 
     newFirstLi.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -229,6 +305,28 @@ document.addEventListener("DOMContentLoaded", () => {
     items.forEach(item => {
       const newItem = item.cloneNode(true);
       item.parentNode.replaceChild(newItem, item);
+
+      // Ajoute l'écouteur clavier ici aussi !
+      newItem.setAttribute('tabindex', '0');
+      newItem.addEventListener('keydown', function(e) {
+        const allLis = Array.from(menu.querySelectorAll('li'));
+        const currentIndex = allLis.indexOf(document.activeElement);
+
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          newItem.click();
+        }
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          let next = (currentIndex + 1) % allLis.length;
+          allLis[next].focus();
+        }
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          let prev = (currentIndex - 1 + allLis.length) % allLis.length;
+          allLis[prev].focus();
+        }
+      });
 
       newItem.addEventListener("click", function(e) {
         e.stopPropagation();

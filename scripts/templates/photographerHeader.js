@@ -9,7 +9,7 @@ export default function photographerHeaderTemplate(data) {
         // Créer un nouvel élément article
         const article = document.createElement('article');
         article.setAttribute("class", "photograph-card");
-    
+        article.setAttribute('tabindex','0')
         // Ajouter l'image du photographe
         const img = document.createElement('img');
         img.setAttribute("src", picture);

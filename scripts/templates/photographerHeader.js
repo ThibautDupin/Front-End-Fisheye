@@ -1,51 +1,44 @@
 export default function photographerHeaderTemplate(data) {
-
-    
-    const { id, name, portrait, city, country,tagline } = data
-
+    const { name, portrait, city, country, tagline } = data;
     const picture = `assets/photographers/${portrait}`;
-    
+
     function getPhotoDOM() {
-        // Créer un nouvel élément article
         const article = document.createElement('article');
-        article.setAttribute("class", "photograph-card");
-        article.setAttribute('tabindex','0')
-        // Ajouter l'image du photographe
+        article.className = "photograph-card";
+        article.tabIndex = 0;
+
         const img = document.createElement('img');
-        img.setAttribute("src", picture);
-        img.setAttribute("alt", `Portrait de ${name}`);
+        img.src = picture;
+        img.alt = `Portrait de ${name}`;
         article.appendChild(img);
+
         const button = document.createElement('button');
-        button.setAttribute("aria-label", `Contactez ${name}`);
-        button.setAttribute("class", "contact_button");
+        button.className = "contact_button";
+        button.ariaLabel = `Contactez ${name}`;
         button.textContent = "Contactez-moi";
-        button.addEventListener("click", () => {    
-            const contactModal = document.querySelector("#contact-modal");
-            contactModal.style.transform = "translateX(0%)";
-        });
+        button.onclick = () => {
+            document.querySelector("#contact-modal").style.transform = "translateX(0%)";
+        };
         article.appendChild(button);
-    
-        // Ajouter les informations du photographe
-        const div = document.createElement('div');
-        div.setAttribute("class", "photographer-information");
-        article.appendChild(div);
-        // Ajouter le nom du photographe
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = "photographer-information";
+        article.appendChild(infoDiv);
+
         const h2 = document.createElement('h2');
         h2.textContent = name;
-        div.appendChild(h2);
-        // Ajouter la localisation
+        infoDiv.appendChild(h2);
+
         const location = document.createElement('p');
         location.textContent = `${city}, ${country}`;
-        div.appendChild(location);
-    
-        // Ajouter la tagline
+        infoDiv.appendChild(location);
+
         const taglinePhotographer = document.createElement('p');
         taglinePhotographer.textContent = tagline;
-        div.appendChild(taglinePhotographer);
-    
-        return article; // Retourner le nouvel élément
+        infoDiv.appendChild(taglinePhotographer);
+
+        return article;
     }
-    
-    return {picture, getPhotoDOM};
-    
+
+    return { picture, getPhotoDOM };
 }

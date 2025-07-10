@@ -1,45 +1,54 @@
 export default function photographerTemplate(data) {
-    const { id, name, portrait } = data;
-
+    const { id, name, portrait, city, country, tagline, price } = data;
     const picture = `assets/photographers/${portrait}`;
 
     function getUserCardDOM() {
-        const article = document.createElement( 'article' );
-        const link= document.createElement( 'a' );
-        link.setAttribute("href", `photographer.html?id=${id}`);
-        link.setAttribute("aria-label", `Acceder à la page de ${name}`);
-        article.appendChild(link);
-        const img = document.createElement( 'img' );
+        // Crée l'ancre parent
+        const link = document.createElement('a');
+        link.href = `photographer.html?id=${id}`;
+        link.setAttribute("aria-label", `Accéder à la page de ${name}`);
+        link.style.textDecoration = "none"; // Optionnel : retire le soulignement
 
-        const descriptionContainer= document.createElement( 'div' );
-        descriptionContainer.classList.add('description-container');
-        article.appendChild(descriptionContainer);
+        // Crée l'article à l'intérieur de l'ancre
+        const article = document.createElement('article');
 
-        const countryCity = document.createElement( 'p' );
-        countryCity.textContent = `${data.city}, ${data.country}`;
-        countryCity.classList.add('country-city');
+        // Image
+        const img = document.createElement('img');
+        img.src = picture;
+        img.alt = `Portrait de ${name}`;
+        article.appendChild(img);
+
+        // Nom
+        const h2 = document.createElement('h2');
+        h2.textContent = name;
+        article.appendChild(h2);
+
+        // Description
+        const descriptionContainer = document.createElement('div');
+        descriptionContainer.className = 'description-container';
+
+        const countryCity = document.createElement('p');
+        countryCity.className = 'country-city';
+        countryCity.textContent = `${city}, ${country}`;
         descriptionContainer.appendChild(countryCity);
 
-        const tagline = document.createElement('p');
-        tagline.textContent = `${data.tagline}`;
-        tagline.classList.add('tagline');
-        descriptionContainer.appendChild(tagline);
+        const taglineP = document.createElement('p');
+        taglineP.className = 'tagline';
+        taglineP.textContent = tagline;
+        descriptionContainer.appendChild(taglineP);
 
-        const price = document.createElement( 'p' );
-        price.textContent = `${data.price}€/jour`;
-        price.classList.add('price');
-        descriptionContainer.appendChild(price);
+        const priceP = document.createElement('p');
+        priceP.className = 'price';
+        priceP.textContent = `${price}€/jour`;
+        descriptionContainer.appendChild(priceP);
 
-        img.setAttribute("src", picture)
-        const h2 = document.createElement( 'h2' );
-        h2.textContent = name;
-        link.appendChild(img)
-        img.setAttribute("alt", `Image de ${name}`);
-        img.setAttribute("aria-label", `Acceder à la page de ${name}`);
-        link.appendChild(h2);
-        return (article);
+        article.appendChild(descriptionContainer);
+
+        // Place l'article dans l'ancre
+        link.appendChild(article);
+
+        return link;
     }
-    
-    return {picture, getUserCardDOM};
-    
+
+    return { picture, getUserCardDOM };
 }

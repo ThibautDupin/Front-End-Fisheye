@@ -14,7 +14,7 @@ header { margin: 20px; }
 .logo { width: 200px; height: 50px; }
 
 /* PHOTOGRAPHER HEADER & CARD */
-.photograph-header {
+.photograph-card {
     background-color: #FAFAFA;
     height: 313px;
     width: 1240px;
@@ -30,7 +30,10 @@ header { margin: 20px; }
 .photograph-card img { height: 200px; }
 
 /* PHOTOGRAPHER INFOS */
-.photographer-information { width: 358px; height: 200px; }
+.photographer-information {
+    width: 358px;
+    height: 200px;
+}
 .photographer-information h2 {
     font-size: 64px;
     font-weight: 400;
@@ -106,9 +109,12 @@ header { margin: 20px; }
     transform: translateX(100%);
     font-family: 'DM Sans', Arial, sans-serif;
 }
+.contact-modal a{
+    display:inline-block;
+}
 .modal {
     border-radius: 5px;
-    background-color: #DB8876;
+    background-color: #312E2E;
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -121,7 +127,6 @@ header { margin: 20px; }
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 5;
-    background-color: #312E2E;
     opacity: 0;
 }
 .modal-header-text { font-size: 2.5rem; font-weight: 400; }
@@ -186,6 +191,9 @@ form input {
     margin: 20px;
     align-self: flex-start;
 }
+.send:hover{
+    cursor:pointer
+}
 .contact_button {
     font-size: 20px;
     font-weight: bold;
@@ -205,7 +213,7 @@ form input {
 
 /* DROPDOWN MENU */
 .filter-container {
-    width: 85%;
+    width: 1240px;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -328,7 +336,9 @@ form input {
     color: black;
     font-size: 24px;
 }
-.media-card:focus{
+
+/* ACCESSIBILITÉ */
+.media-card:focus {
     outline: 2px solid #DB8876;
     outline-offset: 4px;
-    }
+}

@@ -18,10 +18,11 @@ async function getPhotographers() {
       photographers.forEach((photographer) => {
         const photographerModel = photographerTemplate(photographer);
         const userCardDOM = photographerModel.getUserCardDOM();
+        userCardDOM.tabIndex = 0;
         photographersSection.appendChild(userCardDOM);
       });
     }
   }
     
     init();
-    
+

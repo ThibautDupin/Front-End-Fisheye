@@ -1,11 +1,11 @@
 import mediaTemplate from "../templates/media.js";
 import photographerHeaderTemplate from "../templates/photographerHeader.js";
 
-// Tri par défaut
+// --- Tri par défaut pour les médias ---
 window.lastCriterion = "popularity";
 window.sortOrder = "desc";
 
-// Récupère les données JSON
+// --- Récupère les données JSON des photographes et médias ---
 async function getPhotographersAndMedia() {
   try {
     const response = await fetch("../data/photographers.json");
@@ -17,7 +17,7 @@ async function getPhotographersAndMedia() {
   }
 }
 
-// Tri des médias
+// --- Trie les médias selon le critère choisi ---
 function sortMedia(mediaArray, criterion, order = "desc") {
   let sorted;
   switch (criterion) {
@@ -37,29 +37,36 @@ function sortMedia(mediaArray, criterion, order = "desc") {
   return sorted;
 }
 
-// Affiche les médias
+// --- Affiche tous les médias du photographe sur la page ---
 function displayMedia(sortedMedia, photographers, photographer, openLightbox) {
   const mediaSection = document.querySelector(".media-section");
   mediaSection.innerHTML = "";
+
+  // Parcours chaque média et l'ajoute à la section
   sortedMedia.forEach((media, idx) => {
     const mediaModel = mediaTemplate(media, photographers);
     const mediaCardDOM = mediaModel.getMedia();
     mediaSection.appendChild(mediaCardDOM);
 
+    // Rendre chaque media-card focusable au clavier pour l'accessibilité
     mediaCardDOM.setAttribute('tabindex', '0');
+
+    // Ouvre la lightbox au clavier (Entrée/Espace)
     mediaCardDOM.addEventListener('keydown', e => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        openLightbox(idx);
+        openLightbox(idx); // Passe l'index du média sélectionné
       }
     });
+
+    // Ouvre la lightbox au clic sur la carte, sauf si clic sur .media-infos (zone likes/titre)
     mediaCardDOM.addEventListener('click', e => {
       if (e.target.closest('.media-infos')) return;
       openLightbox(idx);
     });
   });
 
-  // Total likes
+  // Calcule et affiche le total des likes de tous les médias affichés
   const countLikes = document.querySelectorAll(".media-likes-number");
   let totalLike = Array.from(countLikes).reduce(
     (sum, el) => sum + parseInt(el.textContent, 10), 0
@@ -67,32 +74,35 @@ function displayMedia(sortedMedia, photographers, photographer, openLightbox) {
   document.querySelector("#total-likes-value").textContent = `${totalLike}`;
   document.querySelector("#price-per-day").textContent = `${photographer.price}€/jour`;
 
-  // Gestion des likes
+  // Gestion des likes (clic et clavier)
   document.querySelectorAll(".like-button").forEach(button => {
-    // Clic souris
+    // Clic souris sur le cœur
     button.addEventListener("click", handleLike);
 
-    // Accessibilité clavier
+    // Accessibilité clavier (Entrée/Espace sur le cœur)
     button.addEventListener("keydown", event => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        event.stopPropagation(); // <-- Ajoute ceci pour bloquer la propagation
+        event.stopPropagation(); // Empêche l'ouverture de la lightbox
         handleLike.call(button, event);
       }
     });
   });
 
+  // Fonction pour incrémenter/décrémenter les likes d'un média
   function handleLike(event) {
     const heartIcon = this.querySelector("i");
     const likesNumberElement = this.parentNode.querySelector(".media-likes-number");
     let likesNumber = parseInt(likesNumberElement.textContent, 10);
 
     if (heartIcon.classList.contains("fa-solid")) {
+      // Si déjà liké, on retire le like
       heartIcon.classList.remove("fa-solid");
       heartIcon.classList.add("fa-regular");
       likesNumber--;
       totalLike--;
     } else {
+      // Sinon, on ajoute un like
       heartIcon.classList.remove("fa-regular");
       heartIcon.classList.add("fa-solid");
       likesNumber++;
@@ -103,12 +113,13 @@ function displayMedia(sortedMedia, photographers, photographer, openLightbox) {
   }
 }
 
-// Ouvre la lightbox
+// --- Ouvre la lightbox avec le média sélectionné et gère la navigation ---
 function openLightbox(index, filteredMedia, photographer) {
   const lightbox = document.getElementById("lightbox");
   const lightboxContent = document.getElementById("lightbox-content");
   lightboxContent.innerHTML = "";
 
+  // Ajoute l'image ou la vidéo dans la lightbox selon le type de média
   const mediaItem = filteredMedia[index];
   let element;
   if (mediaItem.image) {
@@ -124,30 +135,34 @@ function openLightbox(index, filteredMedia, photographer) {
   }
   lightboxContent.appendChild(element);
   lightbox.style.display = "flex";
-  window.currentMediaIndex = index;
+  window.currentMediaIndex = index; // Stocke l'index courant pour la navigation
 
-  // Navigation clavier
+  // Navigation clavier dans la lightbox (flèches et échap)
   function handleLightboxKeys(e) {
     if (lightbox.style.display === "flex") {
+      // Flèche gauche : média précédent (boucle avec modulo)
       if (e.key === "ArrowLeft") {
         window.currentMediaIndex = (window.currentMediaIndex - 1 + filteredMedia.length) % filteredMedia.length;
         openLightbox(window.currentMediaIndex, filteredMedia, photographer);
       }
+      // Flèche droite : média suivant (boucle avec modulo)
       if (e.key === "ArrowRight") {
         window.currentMediaIndex = (window.currentMediaIndex + 1) % filteredMedia.length;
         openLightbox(window.currentMediaIndex, filteredMedia, photographer);
       }
+      // Escape : ferme la lightbox
       if (e.key === "Escape") {
         lightbox.style.display = "none";
         document.removeEventListener("keydown", handleLightboxKeys);
       }
     }
   }
+  // Toujours un seul écouteur actif
   document.removeEventListener("keydown", handleLightboxKeys);
   document.addEventListener("keydown", handleLightboxKeys);
 }
 
-// Initialisation principale
+// --- Fonction principale d'initialisation de la page photographe ---
 async function init() {
   const { photographers, media } = await getPhotographersAndMedia();
   const id = new URLSearchParams(window.location.search).get("id");
@@ -156,6 +171,7 @@ async function init() {
     return;
   }
 
+  // Sélectionne le photographe courant
   const photographerSection = document.querySelector(".photograph-header");
   const photographer = photographers.find(p => p.id === parseInt(id));
   if (!photographer) {
@@ -167,11 +183,12 @@ async function init() {
   const photographerModel = photographerHeaderTemplate(photographer);
   photographerSection.appendChild(photographerModel.getPhotoDOM());
 
-  // Contact modal
+  // Gestion de la modale de contact
   const contactButton = document.querySelector(".contact_button");
   if (contactButton) {
     contactButton.addEventListener("click", () => {
       const formTitle = document.querySelector(".form-title");
+      // Ajoute dynamiquement le nom du photographe dans la modale si besoin
       if (formTitle && !formTitle.querySelector(".modal-header-text")) {
         const newDiv = document.createElement("div");
         newDiv.classList.add("modal-header-text");
@@ -183,15 +200,15 @@ async function init() {
         newDiv.appendChild(p);
         formTitle.appendChild(newDiv);
       }
-      // Affiche la modale (si ce n'est pas déjà fait)
+      // Affiche la modale
       document.getElementById("contact-modal").style.display = "flex";
-      // Met le focus sur le premier champ du formulaire (exemple : prénom)
+      // Met le focus sur le premier champ du formulaire pour l'accessibilité
       const firstInput = document.querySelector("#contact-modal input, #contact-modal textarea, #contact-modal button");
       if (firstInput) firstInput.focus();
     });
   }
 
-  // Section médias
+  // Création ou réinitialisation de la section médias
   let mediaSection = document.querySelector(".media-section");
   if (!mediaSection) {
     mediaSection = document.createElement("section");
@@ -201,11 +218,13 @@ async function init() {
     mediaSection.innerHTML = "";
   }
 
+  // Filtre les médias du photographe courant
   const filteredMedia = media.filter(item => item.photographerId === parseInt(id));
   window.filteredMedia = filteredMedia;
+  // Fonction globale pour afficher les médias triés
   window.displayMedia = (sorted) => displayMedia(sorted, photographers, photographer, (idx) => openLightbox(idx, filteredMedia, photographer));
 
-  // Lightbox navigation boutons
+  // Gestion des boutons de navigation de la lightbox
   document.getElementById("lightbox-prev").onclick = function () {
     window.currentMediaIndex = (window.currentMediaIndex - 1 + filteredMedia.length) % filteredMedia.length;
     openLightbox(window.currentMediaIndex, filteredMedia, photographer);
@@ -218,16 +237,17 @@ async function init() {
     document.getElementById("lightbox").style.display = "none";
   };
 
-  // Affichage initial
+  // Affichage initial des médias
   window.displayMedia(filteredMedia);
 }
 
 init();
 
-// Dropdown menu accessibilité et tri
+// --- Dropdown menu accessibilité et tri ---
 document.addEventListener("DOMContentLoaded", () => {
   const menu = document.getElementById("dropdown-menu");
 
+  // Met à jour la flèche de tri sur le menu
   function updateSortArrow() {
     menu.querySelectorAll('.sort-arrow').forEach(span => span.remove());
     const firstLi = menu.querySelector('li');
@@ -239,19 +259,23 @@ document.addEventListener("DOMContentLoaded", () => {
     firstLi.appendChild(arrowSpan);
   }
 
+  // Rend chaque élément de menu focusable et navigable au clavier
   function setLiAccessibility(li) {
     li.setAttribute('tabindex', '0');
     li.addEventListener('keydown', function(e) {
       const allLis = Array.from(menu.querySelectorAll('li'));
       const currentIndex = allLis.indexOf(document.activeElement);
+      // Entrée/Espace : sélectionne l'élément
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         li.click();
       }
+      // Flèche bas : focus sur l'élément suivant (boucle)
       if (e.key === "ArrowDown") {
         e.preventDefault();
         allLis[(currentIndex + 1) % allLis.length].focus();
       }
+      // Flèche haut : focus sur l'élément précédent (boucle)
       if (e.key === "ArrowUp") {
         e.preventDefault();
         allLis[(currentIndex - 1 + allLis.length) % allLis.length].focus();
@@ -259,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Gère le comportement du premier élément du menu (critère principal)
   function setMainItemListener() {
     const firstLi = menu.querySelector("li");
     const newFirstLi = firstLi.cloneNode(true);
@@ -283,6 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSortArrow();
   }
 
+  // Gère le comportement des autres éléments du menu
   function setOtherItemsListeners() {
     const items = Array.from(menu.querySelectorAll("li")).slice(1);
     items.forEach(item => {
@@ -314,11 +340,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Initialisation menu
+  // Initialisation menu : accessibilité et écouteurs
   menu.querySelectorAll('li').forEach(setLiAccessibility);
   setMainItemListener();
   setOtherItemsListeners();
 
+  // Ferme le menu si clic en dehors
   document.addEventListener("click", (e) => {
     if (!menu.contains(e.target)) menu.classList.remove("open");
   });
@@ -326,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateSortArrow();
 });
 
-// Gestion de la soumission du formulaire de contact
+// --- Gestion de la soumission du formulaire de contact ---
 const contactForm = document.querySelector("#contact-modal form");
 if (contactForm) {
   contactForm.addEventListener("submit", function(e) {
@@ -340,12 +367,12 @@ if (contactForm) {
     console.log("Email:", email);
     console.log("Commentaire:", commentaire);
 
-    // Fermer la modale
+    // Ferme la modale après soumission
     document.getElementById("contact-modal").style.display = "none";
   });
 }
 
-// Ajout de l'accessibilité au bouton de fermeture de la modale
+// --- Accessibilité : croix de fermeture de la modale focusable et activable au clavier ---
 document.addEventListener("DOMContentLoaded", () => {
   const closeModalSpan = document.querySelector('.close-modal');
   if (closeModalSpan) {
@@ -358,8 +385,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Rendre l'élément .photograph-header focusable pour l'accessibilité
-
+  // Accessibilité : rend l'en-tête du photographe focusable
+  const header = document.querySelector('.photograph-header');
+  if (header) {
+    header.setAttribute('tabindex', '0');
+  }
 });
 
 

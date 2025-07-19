@@ -5,7 +5,7 @@ async function getPhotographers() {
     const {photographers} = await reponse.json();
     return photographers;
   } catch (error) {
-    console.log("Erreur lors de la récupération des photographes")
+    console.log("Erreur lors de la récupération des photographes", error)
     
   }
 

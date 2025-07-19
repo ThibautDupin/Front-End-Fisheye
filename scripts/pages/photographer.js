@@ -90,7 +90,7 @@ function displayMedia(sortedMedia, photographers, photographer, openLightbox) {
   });
 
   // Fonction pour incrémenter/décrémenter les likes d'un média
-  function handleLike(event) {
+  function handleLike() {
     const heartIcon = this.querySelector("i");
     const likesNumberElement = this.parentNode.querySelector(".media-likes-number");
     let likesNumber = parseInt(likesNumberElement.textContent, 10);

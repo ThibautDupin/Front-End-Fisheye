@@ -383,13 +383,24 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("contact-modal").style.display = "none";
       }
     });
+    // Ajout : fermeture au clic souris
+    closeModalSpan.addEventListener('click', () => {
+      document.getElementById("contact-modal").style.display = "none";
+    });
   }
 
-  // Accessibilité : rend l'en-tête du photographe focusable
-  const header = document.querySelector('.photograph-header');
-  if (header) {
-    header.setAttribute('tabindex', '0');
+  // Ferme la modale si clic à l'extérieur du contenu
+  const contactModal = document.getElementById("contact-modal");
+  if (contactModal) {
+    contactModal.addEventListener("mousedown", (e) => {
+      // Vérifie si le clic est en dehors de la modale (hors .modal-content)
+      if (e.target === contactModal) {
+        contactModal.style.display = "none";
+      }
+    });
   }
+
+
 });
 
 
